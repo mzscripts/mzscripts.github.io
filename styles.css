@@ -15,7 +15,7 @@
     box-sizing: border-box;
 }
 .page-wrapper {
-    max-width: 90%;
+    max-width: 100%;
     margin: 0 auto;       /* centers horizontally */
     padding: 2rem 1rem;   /* optional padding */
   }
@@ -42,7 +42,7 @@ body {
 }
 
 .container {
-    width: 80%;
+    width: 90%;
     max-width: 1200px;
     margin: 0 auto;
     padding: 1rem 0;
