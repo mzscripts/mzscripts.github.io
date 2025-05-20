@@ -88,10 +88,6 @@ document.addEventListener("DOMContentLoaded", function () {
       el: document.querySelector(".dname"),
       text: "M Zaid",
     },
-    {
-      el: document.querySelector(".tagline"),
-      text: "A weeb who loves to code, draw and write.",
-    },
   ];
 
   const scrambleChars = "!@#$%^&*()_+=-{}[]<>?/\\|~";
