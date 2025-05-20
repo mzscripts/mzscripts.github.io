@@ -14,7 +14,26 @@
     padding: 0;
     box-sizing: border-box;
 }
-
+.page-wrapper {
+    max-width: 80%;
+    margin: 0 auto;       /* centers horizontally */
+    padding: 2rem 1rem;   /* optional padding */
+  }
+  
+  /* Optional: Full height for consistent layout */
+  html, body {
+    width: 100%;
+    height: 100%;
+    background-color: #0d0d0d; /* match your terminal theme */
+    color: white;
+    font-family: monospace;
+  }
+  @media (max-width: 768px) {
+    .page-wrapper {
+      max-width: 90%;
+    }
+  }
+  
 body {
     font-family: 'JetBrains Mono', 'Courier New', monospace;
     background-color: var(--bg-color);
@@ -81,9 +100,9 @@ header {
     font-size: 0.9rem;
 }
 
-.name {
-    font-size: 2.5rem;
-    margin-bottom: 0.5rem;
+.dname {
+    font-size: 3.5rem;
+    margin-bottom: 0.2rem;
     font-weight: 700;
     color: var(--terminal-green);
 }
@@ -143,12 +162,12 @@ header {
     padding: 0.5rem 1rem;
     border-radius: 5px;
     border: 1px solid var(--border-color);
-}
-
+  }
+  
 .terminal-prompt {
     color: var(--terminal-green);
     margin-right: 0.5rem;
-}
+  }
 
 /* About Section */
 .about {
@@ -430,3 +449,5 @@ footer {
 .view-all-projects:hover {
     background-color: rgba(30, 50, 41, 0.5);
 }
+
+  

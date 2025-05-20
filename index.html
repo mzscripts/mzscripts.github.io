@@ -3,18 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Saksham Kushwaha | Developer • Artist • Wannabe Writer</title>
+    <title>M Zaid</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
 </head>
 <body>
+    <div class="page-wrapper">
     <header>
         <nav>
             <ul class="nav-links">
                 <li><a href="#home">[h] home</a></li>
                 <li><a href="#projects">[p] projects</a></li>
                 <li><a href="#blogs">[b] blogs</a></li>
-                <li><a href="#connect">[c] connect</a></li>
+                <!-- <li><a href="#connect">[c] connect</a></li> -->
             </ul>
         </nav>
     </header>
@@ -23,9 +24,9 @@
         <section id="home" class="home">
             <div class="container">
                 <div class="terminal-box">
-                    <p class="terminal-text">Developer • Artist • Wannabe Writer</p>
+                    <p class="terminal-text">Data R&D • Cyclist • Dev.py</p>
                 </div>
-                <h1 class="name">Saksham Kushwaha</h1>
+                <h1 class="dname">M Zaid</h1>
                 <p class="tagline">A weeb who loves to code, draw and write.</p>
                 <div class="cta-buttons">
                     <a href="#connect" class="cta-btn primary">Get in touch</a>
@@ -78,27 +79,23 @@
 
         <section id="blogs" class="blogs">
             <div class="container">
-                <div class="section-header">
-                    <h2 class="terminal-heading">
-                        <span class="terminal-prompt">></span> latestBlogs_
-                    </h2>
-                </div>
-                <div class="blog-list">
-                    <div class="blog-item">
-                        <div class="blog-content">
-                            <h3>How a Potato PC and Friends Made Me a Developer.</h3>
-                            <p>My chill story of becoming a programmer, featuring a almost dying laptop and some epic friends.</p>
-                            <span class="blog-date">3/1/2025</span>
-                        </div>
-                        <a href="#" class="blog-read">READ <span class="arrow">↗</span></a>
-                    </div>
-                </div>
-                <div class="blogs-cta">
-                    <a href="#" class="read-all">Read all blogs <span class="arrow">↗</span></a>
-                </div>
+              <div class="section-header">
+                <h2 class="terminal-heading">
+                  <span class="terminal-prompt">></span> latestBlogs_
+                </h2>
+              </div>
+          
+              <!-- Placeholder for blog content -->
+              <div class="blog-list" id="blog-container">
+                <!-- Blog items will be inserted here via JS -->
+              </div>
+          
+              <div class="blogs-cta">
+                <a href="#" class="read-all">Read all blogs <span class="arrow">↗</span></a>
+              </div>
             </div>
-        </section>
-
+          </section>
+          
         <section id="connect" class="connect">
             <div class="container">
                 <div class="section-header">
@@ -122,10 +119,10 @@
 
     <footer>
         <div class="container">
-            <p>© 2025 Saksham Kushwaha // <span class="username">lirena00</span></p>
+            <p><span class="username">©MZ 2025</span></p>
         </div>
     </footer>
-
+    </div>
     <script src="scripts.js"></script>
 </body>
 </html>
