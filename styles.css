@@ -15,7 +15,7 @@
     box-sizing: border-box;
 }
 .page-wrapper {
-    max-width: 80%;
+    max-width: 90%;
     margin: 0 auto;       /* centers horizontally */
     padding: 2rem 1rem;   /* optional padding */
   }
