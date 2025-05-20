@@ -75,7 +75,7 @@ body {
 }
 
 a {
-    color: var(--text-primary);
+    color: var(--accent-color);
     text-decoration: none;
     transition: color 0.3s ease;
 }
@@ -233,21 +233,18 @@ header {
 
 .project-card {
     background-color: var(--card-bg);
-    border: 1px solid var(--border-color);
+    border: 5px solid var(--border-color);
     border-radius: 5px;
     padding: 1.5rem;
     transition: transform 0.3s ease;
 }
 
-.project-card:hover {
-    transform: translateY(-2px);
-}
+
 
 .project-card h3 {
     color: var(--terminal-green);
     margin-bottom: 0.5rem;
     font-size: 1.1rem;
-    padding: 0.5rem 0;
     border-bottom: 1px solid var(--border-color);
 }
 
