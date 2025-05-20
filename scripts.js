@@ -86,7 +86,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const elements = [
     {
       el: document.querySelector(".dname"),
-      text: "M Zaid",
+      text: "[M]Zaid",
     },
   ];
 
