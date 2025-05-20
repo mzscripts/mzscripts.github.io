@@ -40,7 +40,33 @@ body {
     color: var(--text-primary);
     line-height: 1.6;
 }
-
+#terminal {
+    color: hsl(184, 46%, 37%);
+    font-size: 0.7rem;
+    position: fixed;
+    top: 0;
+    left: 0;
+    padding: 5px 10px;
+    width: 100%;
+    white-space: pre-wrap;
+    z-index: 1000;
+    pointer-events: none;
+    opacity: 0.75;
+    overflow-y: auto;
+    max-height: 200px; /* adjust height as needed */
+  }
+  
+  
+  .scramble {
+    animation: scramble 0.8s ease-in-out;
+  }
+  
+  @keyframes scramble {
+    0% { opacity: 0; filter: blur(2px); }
+    50% { opacity: 0.5; filter: blur(1px); }
+    100% { opacity: 0.75; filter: blur(0); }
+  }
+  
 .container {
     width: 80%;
     max-width: 1200px;
