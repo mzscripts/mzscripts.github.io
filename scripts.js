@@ -86,7 +86,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const elements = [
     {
       el: document.querySelector(".dname"),
-      text: "[M]Zaid",
+      text: "[m]Zaid",
     },
   ];
 
@@ -220,7 +220,7 @@ function fetchGeoInfo() {
 
 // 🖥️ Render terminal line
 function renderTerminalLine() {
-  const line = `[system@web ~]$ uptime: ${getFormattedUptime()} | visitors: ${visitorCount} | ip: ${ipAddress} | loc: ${locationInfo} | mem: 128KB | device: ${getDeviceType()} | OS: ${getOS()} | browser: ${getBrowser()} | screen: ${getScreenSize()} | date: ${getCurrentDate()}`;
+  const line = `[system@web ~]$ uptime: ${getFormattedUptime()} | ip: ${ipAddress} | loc: ${locationInfo} | mem: 128KB | device: ${getDeviceType()} | OS: ${getOS()} | browser: ${getBrowser()} | screen: ${getScreenSize()} | date: ${getCurrentDate()}`;
   terminal.textContent = line;
 }
 
