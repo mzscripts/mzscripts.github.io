@@ -15,7 +15,7 @@
   box-sizing: border-box;
 }
 .page-wrapper {
-  max-width: 100%;
+  max-width: 90%;
   margin: 0 auto; /* centers horizontally */
   padding: 2rem 1rem; /* optional padding */
 }
@@ -27,7 +27,8 @@ body {
   height: 100%;
   background-color: #0d0d0d; /* match your terminal theme */
   color: white;
-  font-family: "JetBrains Mono", "Courier New", monospace;}
+  font-family: "JetBrains Mono", "Courier New", monospace;
+}
 @media (max-width: 768px) {
   .page-wrapper {
     max-width: 90%;
@@ -76,7 +77,7 @@ body {
 }
 
 .container {
-  width: 80%;
+  width: 90%;
   max-width: 1200px;
   margin: 0 auto;
   padding: 1rem 0;
@@ -206,8 +207,6 @@ header {
 /* About Section */
 .about {
   padding: 2rem 0 1rem;
-  font-size: 20px; /* Increase this value as needed */
-
 }
 
 .about-content {
@@ -223,7 +222,6 @@ header {
 
 .about-content p:last-child {
   margin-bottom: 0;
-  
 }
 
 .highlight {
@@ -246,7 +244,7 @@ header {
   border: 5px solid var(--border-color);
   border-radius: 5px;
   padding: 1.5rem;
-  
+
   transition: transform 0.3s ease;
 }
 
@@ -254,14 +252,11 @@ header {
   color: var(--terminal-green);
   margin-bottom: 0.5rem;
   font-size: 1.1rem;
-  font-size: 20px; /* Increase this value as needed */
   border-bottom: 1px solid var(--border-color);
 }
 
 .project-card p {
   font-size: 0.9rem;
-  font-size:15px; /* Increase this value as needed */
-
 }
 
 /* Technology Grid */
