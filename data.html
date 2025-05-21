@@ -1,211 +1,132 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-bs-theme="dark">
 <head>
   <meta charset="UTF-8">
-  <title>Visitor Dashboard</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <!-- Bootstrap Dark Theme -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css" rel="stylesheet">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap-dark-5@1.1.3/dist/css/bootstrap-dark.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/chart.js/dist/Chart.min.css">
-
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Visitor Terminal Log</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <style>
     body {
-      background-color: #121212;
-      color: #e0e0e0;
+      background-color: #0d1117;
+      color: #c9d1d9;
+      font-family: 'Courier New', Courier, monospace;
+      padding: 30px 10px;
     }
+
     h1 {
-      margin: 30px 0;
-      font-weight: bold;
-      color: #ffffff;
-    }
-    .filters {
+      text-align: center;
       margin-bottom: 20px;
+      color: #58a6ff;
     }
-    .filters .form-select {
-      max-width: 200px;
-      display: inline-block;
-      margin: 10px;
-      background-color: #1f1f1f;
-      color: #ffffff;
-      border-color: #333;
+
+    .terminal-box {
+      background-color: #161b22;
+      border: 1px solid #30363d;
+      border-radius: 12px;
+      padding: 15px;
+      max-height: 80vh;
+      overflow-y: auto;
     }
-    .table-container {
-      overflow-x: auto;
+
+    .table thead {
+      background-color: #21262d;
+      color: #58a6ff;
+      position: sticky;
+      top: 0;
     }
-    canvas {
-      background-color: #1e1e1e;
-      padding: 20px;
-      border-radius: 10px;
-      margin-bottom: 30px;
+
+    .table td, .table th {
+      vertical-align: middle;
+      font-size: 14px;
     }
-    .chart-container {
-      max-width: 800px;
-      margin: auto;
+
+    .table tbody tr:nth-child(odd) {
+      background-color: #161b22;
+    }
+
+    .table tbody tr:nth-child(even) {
+      background-color: #0d1117;
+    }
+
+    .log-id { color: #8b949e; }
+    .ip { color: #58a6ff; }
+    .browser { color: #d2a8ff; }
+    .os { color: #56d364; }
+    .duration { color: #f85149; }
+
+    @media (max-width: 768px) {
+      .table-responsive { font-size: 12px; }
     }
   </style>
 </head>
 <body>
 
-<div class="container">
-  <h1 class="text-center">Visitor Data Dashboard</h1>
+<h1>📡 Visitor Terminal Log</h1>
 
-
-
-  <div class="filters d-flex flex-wrap justify-content-center">
-    <select id="locationFilter" class="form-select" aria-label="Location Filter">
-      <option value="">All Locations</option>
-    </select>
-    <select id="osFilter" class="form-select" aria-label="OS Filter">
-      <option value="">All OS</option>
-    </select>
-    <select id="browserFilter" class="form-select" aria-label="Browser Filter">
-      <option value="">All Browsers</option>
-    </select>
-    <select id="deviceFilter" class="form-select" aria-label="Device Filter">
-      <option value="">All Devices</option>
-    </select>
-  </div>
-
-  <div class="table-container">
-    <table id="visitorTable" class="table table-striped table-dark table-bordered">
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Timestamp</th>
-          <th>IP</th>
-          <th>Location</th>
-          <th>Device</th>
-          <th>OS</th>
-          <th>Browser</th>
-          <th>Screen</th>
-          <th>Date</th>
-          <th>Uptime</th>
-        </tr> [system@web ~]$ uptime: 140m 30s |
-         ip: 157.119.219.148 |
-          loc: New Delhi, National Capital Territory of Delhi, IN
-           | mem: 128KB | 
-           device: desktop |
-            OS: Windows | browser: Chrome |
-             screen: 1280x720 | date: Wed May 21 2025
-        [h] home
-        [p] projects
-        [e] experience
-        
-      </thead>
-      <tbody></tbody>
-    </table>
-    <div class="chart-container">
-        <canvas id="osChart"></canvas>
-      </div>
-  </div>
+<div class="terminal-box table-responsive">
+  <table class="table table-dark table-hover table-bordered">
+    <thead>
+      <tr>
+        <th>Visit ID</th>
+        <th>Timestamp</th>
+        <th>IP Address</th>
+        <th>Location</th>
+        <th>ISP</th>
+        <th>Postal</th>
+        <th>Region</th>
+        <th>Timezone</th>
+        <th>Device</th>
+        <th>OS</th>
+        <th>Browser</th>
+        <th>Resolution</th>
+        <th>Date</th>
+        <th>Duration</th>
+      </tr>
+    </thead>
+    <tbody id="logBody">
+      <!-- Data will load here -->
+    </tbody>
+  </table>
 </div>
 
-<!-- JS Libraries -->
-<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
-<script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
 <script>
-  const apiUrl = "https://visitordata.onrender.com/data";
+  async function loadVisitorData() {
+    try {
+      const res = await fetch("https://visitordata.onrender.com/data");
+      const data = await res.json();
 
-  function populateFilterOptions(data, selector, index) {
-    const uniqueValues = [...new Set(data.map(row => row[index] || "Unknown"))];
-    uniqueValues.sort();
-    const select = $(selector);
-    uniqueValues.forEach(value => {
-      select.append(`<option value="${value}">${value}</option>`);
-    });
-  }
+      const logBody = document.getElementById("logBody");
+      logBody.innerHTML = ""; // Clear old rows
 
-  function filterTable(table) {
-    const loc = $('#locationFilter').val().toLowerCase();
-    const os = $('#osFilter').val().toLowerCase();
-    const browser = $('#browserFilter').val().toLowerCase();
-    const device = $('#deviceFilter').val().toLowerCase();
+      data.reverse().forEach(entry => {
+        const tr = document.createElement("tr");
 
-    table.rows().every(function () {
-      const row = this.data();
-      const match =
-        (loc === '' || (row[3] || '').toLowerCase() === loc) &&
-        (os === '' || (row[5] || '').toLowerCase() === os) &&
-        (browser === '' || (row[6] || '').toLowerCase() === browser) &&
-        (device === '' || (row[4] || '').toLowerCase() === device);
+        entry.forEach((value, idx) => {
+          const td = document.createElement("td");
+          td.textContent = value;
 
-      if (match) {
-        $(this.node()).show();
-      } else {
-        $(this.node()).hide();
-      }
-    });
-  }
+          // Add style classes
+          if (idx === 0) td.classList.add("log-id");
+          if (idx === 2) td.classList.add("ip");
+          if (idx === 10) td.classList.add("browser");
+          if (idx === 9) td.classList.add("os");
+          if (idx === 13) td.classList.add("duration");
 
-  function generateOSChart(data) {
-    const ctx = document.getElementById('osChart').getContext('2d');
-    const osCounts = {};
-    data.forEach(row => {
-      const os = row[5] || "Unknown";
-      osCounts[os] = (osCounts[os] || 0) + 1;
-    });
-    new Chart(ctx, {
-      type: 'pie',
-      data: {
-        labels: Object.keys(osCounts),
-        datasets: [{
-          data: Object.values(osCounts),
-          backgroundColor: ["#8e44ad", "#3498db", "#2ecc71", "#e67e22", "#e74c3c"]
-        }]
-      },
-      options: {
-        plugins: {
-          tooltip: {
-            callbacks: {
-              label: function(context) {
-                const label = context.label || '';
-                const value = context.raw || 0;
-                return `${label}: ${value}`;
-              }
-            }
-          }
-        }
-      }
-    });
-  }
+          tr.appendChild(td);
+        });
 
-  $(document).ready(function () {
-    $.getJSON(apiUrl, function (data) {
-      const table = $('#visitorTable').DataTable({
-        data: data,
-        columns: [
-          { title: "ID" },
-          { title: "Timestamp" },
-          { title: "IP" },
-          { title: "Location" },
-          { title: "Device" },
-          { title: "OS" },
-          { title: "Browser" },
-          { title: "Screen" },
-          { title: "Date" },
-          { title: "Uptime" }
-        ],
-        pageLength: 10
+        logBody.appendChild(tr);
       });
+    } catch (err) {
+      console.error("Failed to fetch visitor data:", err);
+    }
+  }
 
-      populateFilterOptions(data, '#locationFilter', 3);
-      populateFilterOptions(data, '#osFilter', 5);
-      populateFilterOptions(data, '#browserFilter', 6);
-      populateFilterOptions(data, '#deviceFilter', 4);
-      generateOSChart(data);
+  // Load on page load
+  window.onload = loadVisitorData;
 
-      $('.form-select').on('change', function () {
-        filterTable(table);
-      });
-    });
-  });
+  // Optional: Refresh data every 30 seconds
+  setInterval(loadVisitorData, 30000);
 </script>
 
 </body>
