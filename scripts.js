@@ -162,9 +162,13 @@ document.addEventListener("DOMContentLoaded", () => {
     localStorage.setItem("visitorCount", visitorCount);
   }
 
-  // Global variables
-  let ipAddress = "loading...";
-  let locationInfo = "locating...";
+  let ipAddress = "unknown";
+  let locationInfo = "unknown";
+  let orgInfo = "unknown";
+  let postalCode = "unknown";
+  let regionCode = "unknown";
+  let timeZone = "unknown";
+  
 
   function getFormattedUptime() {
     const now = new Date();
@@ -204,17 +208,8 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function renderTerminalLine() {
-    const line = `[system@web ~]$ uptime: ${getFormattedUptime()} | ip: ${ipAddress} | loc: ${locationInfo} | mem: 128KB | device: ${getDeviceType()} | OS: ${getOS()} | browser: ${getBrowser()} | screen: ${getScreenSize()} | date: ${getCurrentDate()}`;
+    const line = `[system@web ~]$ uptime: ${getFormattedUptime()} | ip: ${ipAddress} | loc: ${locationInfo} | org: ${orgInfo} | postal: ${postalCode} | region: ${regionCode} | timezone: ${timeZone} | mem: 128KB | device: ${getDeviceType()} | OS: ${getOS()} | browser: ${getBrowser()} | screen: ${getScreenSize()} | date: ${getCurrentDate()}`;
     terminal.textContent = line;
-  }
-
-  function scrambleText(length) {
-    const scrambleChars = "!@#$%^&*()_+=-{}[]|;:<>,.?/~`";
-    let result = "";
-    for (let i = 0; i < length; i++) {
-      result += scrambleChars.charAt(Math.floor(Math.random() * scrambleChars.length));
-    }
-    terminal.textContent = result;
   }
 
   function loadScrambleThenRender() {
@@ -237,11 +232,19 @@ document.addEventListener("DOMContentLoaded", () => {
       .then(data => {
         ipAddress = data.ip || "unknown";
         locationInfo = `${data.city || ""}, ${data.region || ""}, ${data.country || ""}`.trim();
-
+        orgInfo = data.org || "unknown";
+        postalCode = data.postal || "unknown";
+        regionCode = data.region_code || "unknown";
+        timeZone = data.timezone || "unknown";
+  
         sendToBackend({
           timestamp: new Date().toISOString(),
           ip: ipAddress,
           location: locationInfo,
+          org: orgInfo,
+          postal: postalCode,
+          region: regionCode,
+          timezone: timeZone,
           device: getDeviceType(),
           os: getOS(),
           browser: getBrowser(),
@@ -249,7 +252,7 @@ document.addEventListener("DOMContentLoaded", () => {
           date: getCurrentDate(),
           uptime: getFormattedUptime(),
         });
-
+  
         renderTerminalLine();
       })
       .catch(() => {
@@ -257,6 +260,7 @@ document.addEventListener("DOMContentLoaded", () => {
         renderTerminalLine();
       });
   }
+  
 
   function sendToBackend(data) {
     fetch("https://visitordata.onrender.com/log", {
@@ -283,7 +287,6 @@ document.addEventListener("DOMContentLoaded", () => {
   fetchGeoInfo();
   loadScrambleThenRender();
 });
-
 
 // 🖥️ Render terminal line
 function renderTerminalLine() {
