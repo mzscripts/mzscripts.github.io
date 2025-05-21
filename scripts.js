@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     });
   });
-   
+
   // Add active class to nav links based on scroll position
   const sections = document.querySelectorAll("section");
   const navLinks = document.querySelectorAll(".nav-links a");
@@ -149,74 +149,141 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 });
-const terminal = document.getElementById("terminal");
-const startTime = new Date();
 
-const VISITOR_KEY = "unique_visitor_id";
-let visitorCount = localStorage.getItem("visitorCount") || 33;
-if (!localStorage.getItem(VISITOR_KEY)) {
-  localStorage.setItem(VISITOR_KEY, Date.now());
-  visitorCount = parseInt(visitorCount) + 1;
-  localStorage.setItem("visitorCount", visitorCount);
-}
+document.addEventListener("DOMContentLoaded", () => {
+  const terminal = document.getElementById("terminal");
+  const startTime = new Date();
 
-// Helper functions
-function getFormattedUptime() {
-  const now = new Date();
-  const diff = Math.floor((now - startTime) / 1000);
-  const minutes = Math.floor(diff / 60);
-  const seconds = diff % 60;
-  return `${minutes}m ${seconds}s`;
-}
+  const VISITOR_KEY = "unique_visitor_id";
+  let visitorCount = localStorage.getItem("visitorCount") || 33;
+  if (!localStorage.getItem(VISITOR_KEY)) {
+    localStorage.setItem(VISITOR_KEY, Date.now());
+    visitorCount = parseInt(visitorCount) + 1;
+    localStorage.setItem("visitorCount", visitorCount);
+  }
 
-function getCurrentDate() {
-  return new Date().toDateString();
-}
+  // Global variables
+  let ipAddress = "loading...";
+  let locationInfo = "locating...";
 
-function getDeviceType() {
-  return /Mobi|Android/i.test(navigator.userAgent) ? "mobile" : "desktop";
-}
+  function getFormattedUptime() {
+    const now = new Date();
+    const diff = Math.floor((now - startTime) / 1000);
+    const minutes = Math.floor(diff / 60);
+    const seconds = diff % 60;
+    return `${minutes}m ${seconds}s`;
+  }
 
-function getOS() {
-  const platform = navigator.platform.toLowerCase();
-  if (platform.includes("win")) return "Windows";
-  if (platform.includes("mac")) return "macOS";
-  if (platform.includes("linux")) return "Linux";
-  return "Unknown";
-}
+  function getCurrentDate() {
+    return new Date().toDateString();
+  }
 
-function getBrowser() {
-  const ua = navigator.userAgent;
-  if (ua.includes("Firefox")) return "Firefox";
-  if (ua.includes("Edg")) return "Edge";
-  if (ua.includes("Chrome") && !ua.includes("Chromium")) return "Chrome";
-  if (ua.includes("Safari") && !ua.includes("Chrome")) return "Safari";
-  return "Unknown";
-}
+  function getDeviceType() {
+    return /Mobi|Android/i.test(navigator.userAgent) ? "mobile" : "desktop";
+  }
 
-function getScreenSize() {
-  return `${window.screen.width}x${window.screen.height}`;
-}
+  function getOS() {
+    const platform = navigator.platform.toLowerCase();
+    if (platform.includes("win")) return "Windows";
+    if (platform.includes("mac")) return "macOS";
+    if (platform.includes("linux")) return "Linux";
+    return "Unknown";
+  }
 
-let ipAddress = "loading...";
-let locationInfo = "locating...";
+  function getBrowser() {
+    const ua = navigator.userAgent;
+    if (ua.includes("Firefox")) return "Firefox";
+    if (ua.includes("Edg")) return "Edge";
+    if (ua.includes("Chrome") && !ua.includes("Chromium")) return "Chrome";
+    if (ua.includes("Safari") && !ua.includes("Chrome")) return "Safari";
+    return "Unknown";
+  }
 
-// 🌍 Fetch IP and Location
-function fetchGeoInfo() {
-  fetch("https://ipapi.co/json/")
-    .then(res => res.json())
-    .then(data => {
-      ipAddress = data.ip || "unknown";
-      const city = data.city || "";
-      const region = data.region || "";
-      const country = data.country || "";
-      locationInfo = `${city}, ${region}, ${country}`.replace(/^, |, , /g, "").trim();
+  function getScreenSize() {
+    return `${window.screen.width}x${window.screen.height}`;
+  }
+
+  function renderTerminalLine() {
+    const line = `[system@web ~]$ uptime: ${getFormattedUptime()} | ip: ${ipAddress} | loc: ${locationInfo} | mem: 128KB | device: ${getDeviceType()} | OS: ${getOS()} | browser: ${getBrowser()} | screen: ${getScreenSize()} | date: ${getCurrentDate()}`;
+    terminal.textContent = line;
+  }
+
+  function scrambleText(length) {
+    const scrambleChars = "!@#$%^&*()_+=-{}[]|;:<>,.?/~`";
+    let result = "";
+    for (let i = 0; i < length; i++) {
+      result += scrambleChars.charAt(Math.floor(Math.random() * scrambleChars.length));
+    }
+    terminal.textContent = result;
+  }
+
+  function loadScrambleThenRender() {
+    const totalFrames = 15;
+    let scrambleIndex = 0;
+    const interval = setInterval(() => {
+      scrambleIndex++;
+      scrambleText(90);
+      if (scrambleIndex >= totalFrames) {
+        clearInterval(interval);
+        renderTerminalLine();
+        setInterval(renderTerminalLine, 1000); // live uptime
+      }
+    }, 50);
+  }
+
+  function fetchGeoInfo() {
+    fetch("https://ipapi.co/json/")
+      .then(res => res.json())
+      .then(data => {
+        ipAddress = data.ip || "unknown";
+        locationInfo = `${data.city || ""}, ${data.region || ""}, ${data.country || ""}`.trim();
+
+        sendToBackend({
+          timestamp: new Date().toISOString(),
+          ip: ipAddress,
+          location: locationInfo,
+          device: getDeviceType(),
+          os: getOS(),
+          browser: getBrowser(),
+          screen: getScreenSize(),
+          date: getCurrentDate(),
+          uptime: getFormattedUptime(),
+        });
+
+        renderTerminalLine();
+      })
+      .catch(() => {
+        locationInfo = "unavailable";
+        renderTerminalLine();
+      });
+  }
+
+  function sendToBackend(data) {
+    fetch("https://visitordata.onrender.com/log", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
     })
-    .catch(() => {
-      ipAddress = "unavailable";
-      locationInfo = "unknown";
-    });
-}
+      .then((response) => {
+        if (!response.ok) throw new Error("Logging failed");
+        console.log("Logged to backend successfully");
+      })
+      .catch((error) => console.error("Logging failed:", error));
+  }
+
+  // Hide terminal on scroll down
+  let lastScrollTop = 0;
+  window.addEventListener("scroll", () => {
+    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+    terminal.style.opacity = scrollTop > lastScrollTop ? "0" : "0.75";
+    lastScrollTop = Math.max(scrollTop, 0);
+  });
+
+  // Run initial loaders
+  fetchGeoInfo();
+  loadScrambleThenRender();
+});
+
 
 // 🖥️ Render terminal line
 function renderTerminalLine() {
@@ -227,9 +294,11 @@ function renderTerminalLine() {
 // 🔠 Terminal-style loading scramble
 function scrambleText(length) {
   const scrambleChars = "!@#$%^&*()_+=-{}[]|;:<>,.?/~`";
-  let result = '';
+  let result = "";
   for (let i = 0; i < length; i++) {
-    result += scrambleChars.charAt(Math.floor(Math.random() * scrambleChars.length));
+    result += scrambleChars.charAt(
+      Math.floor(Math.random() * scrambleChars.length)
+    );
   }
   terminal.textContent = result;
 }
@@ -252,7 +321,7 @@ let lastScrollTop = 0;
 
 window.addEventListener("scroll", function () {
   const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-  
+
   if (scrollTop > lastScrollTop) {
     // Scrolling down → hide
     terminal.style.opacity = "0";
