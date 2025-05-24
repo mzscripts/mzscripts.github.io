@@ -90,44 +90,49 @@
 </div>
 
 <script>
-  async function loadVisitorData() {
-    try {
-      const res = await fetch("https://visitordata.onrender.com/data");
-      const data = await res.json();
+async function loadVisitorData() {
+  try {
+    const res = await fetch("https://visitordata.onrender.com/data");
+    const data = await res.json();
 
-      const logBody = document.getElementById("logBody");
-      logBody.innerHTML = ""; // Clear old rows
+    const logBody = document.getElementById("logBody");
+    logBody.innerHTML = ""; // Clear old rows
 
-      data.reverse().forEach(entry => {
-        const tr = document.createElement("tr");
+    const fields = [
+      "id", "date", "timestamp", "ip", "location",
+      "org", "region", "postal", "device", "os",
+      "browser", "screen", "timezone", "uptime"
+    ];
 
-        entry.forEach((value, idx) => {
-          const td = document.createElement("td");
-          td.textContent = value;
+    // Sort by timestamp (newest first)
+    data.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
 
-          // Add style classes
-          if (idx === 0) td.classList.add("log-id");
-          if (idx === 2) td.classList.add("ip");
-          if (idx === 10) td.classList.add("browser");
-          if (idx === 9) td.classList.add("os");
-          if (idx === 13) td.classList.add("duration");
+    data.forEach(entry => {
+      const tr = document.createElement("tr");
 
-          tr.appendChild(td);
-        });
+      fields.forEach(field => {
+        const td = document.createElement("td");
+        td.textContent = entry[field];
 
-        logBody.appendChild(tr);
+        // Add style classes for specific fields
+        if (field === "id") td.classList.add("log-id");
+        if (field === "ip") td.classList.add("ip");
+        if (field === "browser") td.classList.add("browser");
+        if (field === "os") td.classList.add("os");
+        if (field === "uptime") td.classList.add("duration");
+
+        tr.appendChild(td);
       });
-    } catch (err) {
-      console.error("Failed to fetch visitor data:", err);
-    }
-  }
 
+      logBody.appendChild(tr);
+    });
+  } catch (err) {
+    console.error("Failed to fetch visitor data:", err);
+  }
+}
   // Load on page load
   window.onload = loadVisitorData;
 
-  // Optional: Refresh data every 30 seconds
-  setInterval(loadVisitorData, 30000);
-</script>
-
+  </script>
 </body>
 </html>

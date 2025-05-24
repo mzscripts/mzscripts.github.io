@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Visitor Terminal UI</title>
+  <style>
+    body {
+      background-color: #0f111a;
+      color: #00ff9f;
+      font-family: 'Courier New', Courier, monospace;
+      padding: 20px;
+    }
+    .terminal {
+      background-color: #1c1f2a;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 20px #00ff9f33;
+      margin-bottom: 20px;
+    }
+    .header {
+      color: #ffffff;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+    .label {
+      color: #00ffe7;
+    }
+    .value {
+      color: #ffffff;
+    }
+  </style>
+</head>
+<body>
+  <div id="terminal-container"></div>
+
+  <script>
+    async function fetchVisitorData() {
+      try {
+        const res = await fetch('https://visitordata.onrender.com/mztv');
+        const data = await res.json();
+
+        const container = document.getElementById('terminal-container');
+
+        data.forEach(visitor => {
+          const terminal = document.createElement('div');
+          terminal.className = 'terminal';
+
+          terminal.innerHTML = `
+            <div class="header">Visitor #${visitor.id}</div>
+            <div><span class="label">IP:</span> <span class="value">${visitor.ip}</span></div>
+            <div><span class="label">Location:</span> <span class="value">${visitor.location}</span></div>
+            <div><span class="label">OS:</span> <span class="value">${visitor.os}</span></div>
+            <div><span class="label">Browser:</span> <span class="value">${visitor.browser}</span></div>
+            <div><span class="label">Device:</span> <span class="value">${visitor.device}</span></div>
+            <div><span class="label">Screen:</span> <span class="value">${visitor.screen}</span></div>
+            <div><span class="label">Date:</span> <span class="value">${visitor.date}</span></div>
+            <div><span class="label">Uptime:</span> <span class="value">${visitor.uptime}</span></div>
+            <div><span class="label">Org:</span> <span class="value">${visitor.org}</span></div>
+            <div><span class="label">Timezone:</span> <span class="value">${visitor.timezone}</span></div>
+          `;
+
+          container.appendChild(terminal);
+        });
+      } catch (err) {
+        console.error('Failed to fetch visitor data:', err);
+      }
+    }
+
+    fetchVisitorData();
+  </script>
+</body>
+</html>
