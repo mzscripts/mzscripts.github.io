@@ -263,7 +263,7 @@ document.addEventListener("DOMContentLoaded", () => {
   
 
   function sendToBackend(data) {
-    fetch("https://visitordata.onrender.com/log", {
+    fetch("https://visitordata.onrender.com/", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),
